@@ -7,7 +7,7 @@ import RegistroFormulario from './components/RegistroFormulario.vue';
         <div class="container">
             <div class="row">
                 <div class="col-12">
-                    <h1 class="mb-4">Componente principal de la App</h1>
+                    <h1 class="mb-4">Formulario de contacto</h1>
                     <RegistroFormulario />
                 </div>
             </div>
