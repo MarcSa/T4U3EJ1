@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import RegistroFormulario from './components/RegistroFormulario.vue';
+import ContactForm from './components/ContactForm.vue';
 </script>
 
 <template>
@@ -8,7 +8,7 @@ import RegistroFormulario from './components/RegistroFormulario.vue';
             <div class="row">
                 <div class="col-12">
                     <h1 class="mb-4">Formulario de contacto</h1>
-                    <RegistroFormulario />
+                    <ContactForm />
                 </div>
             </div>
         </div>
