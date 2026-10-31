@@ -3,36 +3,23 @@ import { useForm } from 'vee-validate';
 import * as yup from 'yup';
 
 const schema = yup.object({
-    name: yup.string().required().min(2).max(50),
-    email: yup.string().required().email(),
-    password: yup.string().required().min(8),
-    confirm: yup
+    name: yup
         .string()
-        .oneOf([yup.ref('password')], 'Las contraseñas no coinciden')
-        .required(),
-    country: yup.string().required('Selecciona un país'),
-    birthdate: yup
-        .date()
-        .typeError('Introduce una fecha válida')
-        .required('La fecha de nacimiento es obligatoria')
-        .max(new Date(), 'La fecha no puede ser futura'),
-    age: yup
-        .number()
-        .typeError('Introduce un número válido')
-        .required('La edad es obligatoria')
-        .min(0, 'La edad no puede ser negativa')
-        .max(120, 'Introduce una edad realista'),
+        .required()
+        .min(3)
+        .max(100)
+        .typeError('Mínimo de 3 caracteres. Máximo 100 caracteres.'),
+    email: yup.string().required().email().typeError('Formato correcto.'),
+    subject: yup.string().required().typeError('Debe escribir un asunto.'),
+    message: yup.string().required().min(20).typeError('Mínimo 20 caracteres.'),
 });
 
 // Valores iniciales
 const initialValues = {
     name: '',
     email: '',
-    password: '',
-    confirm: '',
-    country: 'es',
-    birthdate: '',
-    age: '',
+    subject: '',
+    message: '',
 };
 
 const { values, errors, meta, defineField } = useForm({ validationSchema: schema, initialValues });
@@ -40,11 +27,8 @@ const { values, errors, meta, defineField } = useForm({ validationSchema: schema
 // Campos
 const [name, nameAtrrs] = defineField('name');
 const [email, emailAtrrs] = defineField('email');
-const [password, passwordAtrrs] = defineField('password');
-const [confirm, confirmAtrrs] = defineField('confirm');
-const [country, countryAtrrs] = defineField('country');
-const [birthdate, birthdateAtrrs] = defineField('birthdate');
-const [age, ageAtrrs] = defineField('age');
+const [subject, subjectAtrrs] = defineField('subject');
+const [message, messageAtrrs] = defineField('message');
 
 // Submit simulado
 const onSubmit = () => {
@@ -56,7 +40,7 @@ const onSubmit = () => {
     <form class="card px-3 py-4 bg-white form-content" @submit.prevent="onSubmit">
         <h2 class="mb-2">Primer formulario</h2>
         <div class="mb-2">
-            <label for="name" class="mb-2">Nombre:</label>
+            <label for="name" class="mb-2 me-2">Nombre y apellidos:</label>
             <input
                 type="text"
                 v-model="name"
@@ -71,7 +55,7 @@ const onSubmit = () => {
             <p v-if="errors.name" id="name-error" class="error">{{ errors.name }}</p>
         </div>
         <div class="mb-2">
-            <label for="email" class="mb-2">Email:</label>
+            <label for="email" class="mb-2 me-2">Email:</label>
             <input
                 type="text"
                 v-model="email"
@@ -86,90 +70,38 @@ const onSubmit = () => {
             <p v-if="errors.email" id="email-error" class="error">{{ errors.email }}</p>
         </div>
         <div class="mb-2">
-            <label for="password" class="mb-2">Contraseña:</label>
+            <label for="subject" class="mb-2 me-2">Asunto:</label>
             <input
-                type="password"
-                v-model="password"
-                name="password"
-                id="password"
-                v-bind="passwordAtrrs"
+                type="text"
+                v-model="subject"
+                name="subject"
+                id="subject"
+                v-bind="subjectAtrrs"
                 placeholder=""
-                :class="{ invalid: !!errors.password }"
-                :aria-invalid="!!errors.password"
-                aria-describedby="password-error"
+                :class="{ invalid: !!errors.subject }"
+                :aria-invalid="!!errors.subject"
+                aria-describedby="subject-error"
             />
-            <p v-if="errors.password" id="password-error" class="error">{{ errors.password }}</p>
+            <p v-if="errors.subject" id="subject-error" class="error">{{ errors.subject }}</p>
         </div>
         <div class="mb-2">
-            <label for="confirm" class="mb-2">Repite la contraseña:</label>
-            <input
+            <label for="message" class="mb-2 me-2">Mensaje:</label>
+            <textarea
                 type="password"
-                v-model="confirm"
-                name="confirm"
-                id="confirm"
-                v-bind="confirmAtrrs"
+                v-model="message"
+                name="message"
+                id="message"
+                v-bind="messageAtrrs"
                 placeholder=""
-                :class="{ invalid: !!errors.confirm }"
-                :aria-invalid="!!errors.confirm"
-                aria-describedby="confirm-error"
+                :class="{ invalid: !!errors.message }"
+                :aria-invalid="!!errors.message"
+                aria-describedby="message-error"
             />
-            <p v-if="errors.confirm" id="confirm-error" class="error">{{ errors.confirm }}</p>
+            <p v-if="errors.message" id="message-error" class="error">{{ errors.message }}</p>
         </div>
-        <div class="mb-2">
-            <label for="country" class="mb-2">País:</label>
-            <select
-                v-bind="countryAtrrs"
-                id="country"
-                v-model="country"
-                name="country"
-                class="form-select"
-                aria-label="Default select example"
-                :class="{ invalid: !!errors.country }"
-                :aria-invalid="!!errors.country"
-                aria-describedby="country-error"
-            >
-                <option value="es">España</option>
-            </select>
 
-            <p v-if="errors.country" id="country-error" class="error">{{ errors.country }}</p>
-        </div>
-        <div class="mb-2 form-field">
-            <label for="birthdate" class="form-label">Fecha de nacimiento</label>
-            <input
-                type="date"
-                v-model="birthdate"
-                name="birthdate"
-                id="birthdate"
-                v-bind="birthdateAtrrs"
-                autocomplete="off"
-                class="form-control w-12"
-                data-bs-toggle="datepicker"
-                :class="{ invalid: !!errors.birthdate }"
-                :aria-invalid="!!errors.birthdate"
-                aria-describedby="birthdate-error"
-            />
-            <p v-if="errors.birthdate" id="birthdate-error" class="error">{{ errors.birthdate }}</p>
-        </div>
-        <div class="mb-2">
-            <label for="age" class="mb-2">Edad:</label>
-            <input
-                type="number"
-                v-model="age"
-                name="age"
-                id="age"
-                v-bind="ageAtrrs"
-                placeholder=""
-                :class="{ invalid: !!errors.age }"
-                :aria-invalid="!!errors.age"
-                aria-describedby="age-error"
-            />
-            <p v-if="errors.age" id="age-error" class="error">{{ errors.age }}</p>
-        </div>
         <input type="submit" value="Enviar" class="mb-4 btn btn-primary" :disabled="!meta.valid" />
     </form>
-    <pre class="rounded-3 px-3 py-2">{{ values }}</pre>
-    <pre class="rounded-3 px-3 py-2">{{ errors }}</pre>
-    <pre class="rounded-3 px-3 py-2 mb-0">{{ meta }}</pre>
 </template>
 
 <style scoped lang="scss">
